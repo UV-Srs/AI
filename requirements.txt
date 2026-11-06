@@ -1,0 +1,16 @@
+torch
+torchvision
+ultralytics
+opencv-python
+numpy
+pandas
+matplotlib
+Pillow
+PyYAML
+tqdm
+ipykernel
+fastapi
+uvicorn
+python-multipart
+psycopg2-binary
+python-dotenv

@@ -1,0 +1,95 @@
+# ==========================================
+# Python & Virtual Environments
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+.venv/
+venv/
+ENV/
+env/
+
+# ==========================================
+# Environment Variables & Secrets
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ==========================================
+# Node & Frontend
+# ==========================================
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# Local Media & Uploads (Runtime Data)
+# ==========================================
+data/media/*
+!data/media/.gitkeep
+data/*.mp4
+data/*.avi
+data/*.mov
+data/*.jpg
+data/*.jpeg
+data/*.png
+data/*.webp
+
+# ==========================================
+# YOLO Training Runs & Logs
+# ==========================================
+runs/
+*.log
+
+# ==========================================
+# Large Datasets & Archives (> 100MB / Gigabytes)
+# ==========================================
+*.zip
+*.tar.gz
+*.rar
+Datasets/Raw/
+Datasets/Processed/
+Datasets/Manual_Single_Photo/
+Datasets/Learned/train/
+Datasets/Learned/val/
+!Datasets/Learned/data.yaml
+!Datasets/list_of_all_urls.csv
+
+# ==========================================
+# OS & IDE Cache Files
+# ==========================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.ipynb_checkpoints/

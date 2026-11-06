@@ -1,0 +1,12 @@
+names:
+  0: person
+  1: helmet
+  2: safety_vest
+  3: gloves
+  4: safety_shoes
+  5: goggles
+  6: mask
+  7: ear_protection
+path: C:/Users/SRS1/OneDrive - SRS ConsultingInc/Documents/AI ML/Datasets/Learned
+train: train/images
+val: val/images
