@@ -4,10 +4,16 @@ import json
 import time
 import uuid
 import shutil
+import base64
 import threading
 import numpy as np
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
+
+try:
+    import torch
+except ImportError:
+    torch = None
 
 from backend.app.face.face_engine import face_engine
 from backend.app.services.model_manager import model_manager, APPROVED_CLASSES
@@ -125,15 +131,29 @@ def _process_single_frame(
                 x1, y1, x2, y2 = [int(v) for v in best_face["bbox"]]
                 face_crop = frame_bgr[max(0, y1):min(h, y2), max(0, x1):min(w, x2)]
                 crop_bytes = cv2.imencode(".jpg", face_crop)[1].tobytes() if face_crop.size > 0 else b""
-                save_face_capture(emp_id, "FRONT", dlib_emb, metrics, crop_bytes)
+                emb_bytes = dlib_emb.astype(np.float32).tobytes() if hasattr(dlib_emb, "tobytes") else bytes(dlib_emb)
+                save_face_capture(
+                    emp_id=emp_id,
+                    capture_angle="FRONT",
+                    embedding_bytes=emb_bytes,
+                    landmarks={},
+                    vertices={},
+                    geometry={},
+                    pose={},
+                    quality=metrics if isinstance(metrics, dict) else {"status": "ok"},
+                    image_reference=None
+                )
                 face_enrolled = True
 
     # 2. PPE Detection & YOLO Annotation Generation
     yolo_model = model_manager.get_active_model()
+    if yolo_model is None:
+        model_manager.load_model("combined_sh17")
+        yolo_model = model_manager.get_active_model()
     yolo_lines: List[str] = []
 
     if yolo_model is not None:
-        results = yolo_model.predict(source=frame_bgr, conf=0.10, iou=0.45, imgsz=416, device="cpu", verbose=False)[0]
+        results = yolo_model.predict(source=frame_bgr, conf=0.10, iou=0.45, imgsz=416, device=model_manager.device, verbose=False)[0]
         canonical_map = {
             "helmet": "helmet", "safety-vest": "safety_vest", "vest": "safety_vest",
             "gloves": "gloves", "shoes": "safety_shoes", "boots": "safety_shoes", "safety_shoes": "safety_shoes",
@@ -330,14 +350,29 @@ def _run_training_worker(initial_epochs: int, initial_imgsz: int):
             except Exception:
                 pass
 
-            # Train with fast CPU-friendly parameters
+            # Guard: ensure training dataset contains samples
+            train_images = list(TRAIN_IMG_DIR.glob("*.jpg")) + list(TRAIN_IMG_DIR.glob("*.png"))
+            if not train_images:
+                with _training_lock:
+                    _training_state["status"] = "failed"
+                    _training_state["progress"] = 0
+                    _training_state["message"] = "No training images found in dataset. Ingest at least one image or video first."
+                    _training_state["updated_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+                break
+
+            # GPU / CUDA acceleration with CPU fallback
+            is_cuda = (torch is not None and torch.cuda.is_available() and model_manager.device.startswith("cuda"))
+            train_device = "0" if is_cuda else "cpu"
+            train_batch = 8 if is_cuda else 4
+            train_workers = 2 if is_cuda else 0
+
             results = yolo.train(
                 data=str(DATA_YAML_PATH),
                 epochs=curr_epochs,
                 imgsz=curr_imgsz,
-                device="cpu",
-                batch=4,
-                workers=0,
+                device=train_device,
+                batch=train_batch,
+                workers=train_workers,
                 plots=False,
                 val=False,
                 verbose=False,
@@ -554,14 +589,17 @@ def inspect_media_detections(
 
     try:
         from ultralytics import YOLO
-        model = model_manager.active_model
+        model = model_manager.get_active_model()
         if model is None:
             model_path = BASE_DIR / "Model" / "PPE_Combined_SH17_Best.pt"
             if model_path.exists():
                 model = YOLO(str(model_path))
+            else:
+                model_manager.load_model("combined_sh17")
+                model = model_manager.get_active_model()
 
         if model is not None:
-            results = model.predict(source=frame_bgr, conf=0.12, imgsz=416, verbose=False)[0]
+            results = model.predict(source=frame_bgr, conf=0.12, imgsz=416, device=model_manager.device, verbose=False)[0]
             model_names = getattr(model, "names", {})
             for b in results.boxes:
                 cid = int(b.cls[0].item())
