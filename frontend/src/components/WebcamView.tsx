@@ -213,7 +213,7 @@ export const WebcamView: React.FC<WebcamViewProps> = ({
     } catch (err: any) {
       const errMsg = err?.message || 'Check server connection';
       const friendlyMsg = errMsg.toLowerCase().includes('failed to fetch')
-        ? 'Unable to connect to backend server at http://127.0.0.1:8001. Please make sure start_ppe_detection.ps1 or backend/run.py is running.'
+        ? 'Unable to connect to backend server at http://127.0.0.1:8001. Please make sure python backend/run.py is running.'
         : `Media upload failed: ${errMsg}`;
       setUploadError(friendlyMsg);
     } finally {

@@ -270,7 +270,7 @@ export async function uploadCameraMedia(
   } catch (err: any) {
     if (err.name === 'TypeError' && err.message.includes('fetch')) {
       throw new Error(
-        'Backend server (http://127.0.0.1:8001) is offline. Please start the backend service (run start_ppe_detection.ps1 or python backend/run.py).'
+        'Backend server (http://127.0.0.1:8001) is offline. Please start the backend service (run python backend/run.py).'
       );
     }
     throw err;
