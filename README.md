@@ -203,12 +203,6 @@ To run the complete system (DB, Backend, Frontend) with standard CPU execution:
 ```bash
 # Using Docker Compose:
 docker-compose up --build
-
-# Or on Windows using 1-click script:
-.\start_docker_cpu.ps1
-
-# Or on Linux / macOS:
-./start_docker_cpu.sh
 ```
 
 ### 2. Run in NVIDIA GPU Mode (CUDA 12.1 Hardware Acceleration)
@@ -218,12 +212,6 @@ To run with NVIDIA CUDA hardware acceleration:
 ```bash
 # Using Docker Compose with the GPU overlay:
 docker-compose -f docker-compose.yml -f docker-compose.gpu.yml up --build
-
-# Or on Windows using 1-click script:
-.\start_docker_gpu.ps1
-
-# Or on Linux:
-./start_docker_gpu.sh
 ```
 
 > **GPU Requirements**: NVIDIA host drivers and the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) (`docker-nvidia` / `nvidia-ctk`).
