@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+
+# Python virtual environment and bytecode
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Node.js
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Large Datasets and Archives
+Datasets/Processed/*.zip
+Datasets/Raw/
+*.zip
+*.tar
+*.gz
+*.mp4
+*.avi
+*.mov
+
+# Media uploads (persisted via Docker volume mount)
+data/media/*
+!data/media/.gitkeep
+
+# Runs and checkpoints (persisted via volume mount)
+runs/learned/tune/weights/*.pt
+!Model/*.pt
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,26 @@
+# =============================================================================
+# NVIDIA GPU ACCELERATION OVERRIDE FOR DOCKER COMPOSE
+# =============================================================================
+# Use this overlay to run the backend on NVIDIA GPUs with CUDA 12.1 acceleration:
+#   docker-compose -f docker-compose.yml -f docker-compose.gpu.yml up --build
+#
+# Requirements:
+#   1. NVIDIA GPU drivers installed on host
+#   2. NVIDIA Container Toolkit installed (docker-nvidia / nvidia-ctk)
+# =============================================================================
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
