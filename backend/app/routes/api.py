@@ -647,10 +647,19 @@ def list_learned_samples(limit: int = 50):
 # Training Inspection & Dataset Visualization Endpoints
 # ==========================================
 
-DATASET_ROOT = Path(__file__).resolve().parent.parent.parent.parent / "PPE_Training_Project" / "Dataset"
+_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+if (_ROOT / "Datasets" / "Learned" / "train" / "images").exists():
+    DATASET_ROOT = _ROOT / "Datasets" / "Learned"
+elif (_ROOT / "Datasets" / "Processed" / "PPE_Combined_SH17" / "train" / "images").exists():
+    DATASET_ROOT = _ROOT / "Datasets" / "Processed" / "PPE_Combined_SH17"
+elif (_ROOT / "PPE_Training_Project" / "Dataset").exists():
+    DATASET_ROOT = _ROOT / "PPE_Training_Project" / "Dataset"
+else:
+    DATASET_ROOT = _ROOT / "Datasets" / "Learned"
+
 TRAIN_IMAGES_DIR = DATASET_ROOT / "train" / "images"
 TRAIN_LABELS_DIR = DATASET_ROOT / "train" / "labels"
-RUNS_DIR = Path(__file__).resolve().parent.parent.parent.parent / "runs" / "learned" / "tune"
+RUNS_DIR = _ROOT / "runs" / "learned" / "tune"
 
 ID_TO_CLASS = {
     0: "person",

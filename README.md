@@ -12,6 +12,7 @@ An enterprise-grade, edge-AI computer vision system that inspects industrial Per
 - [Approved PPE Classes](#approved-ppe-classes)
 - [Prerequisites](#prerequisites)
 - [Installation & Setup](#installation--setup)
+- [Docker Deployment (CPU & GPU)](#docker-deployment-cpu--gpu)
 - [Commands to Run the Project](#commands-to-run-the-project)
 - [Running Automated Verification Tests](#running-automated-verification-tests)
 - [Project Directory Structure](#project-directory-structure)
@@ -188,7 +189,55 @@ python backend/app/db/migrate_to_postgres.py
 
 ---
 
-## Commands to Run the Project
+## Docker Deployment (CPU & GPU)
+
+The project includes an enterprise-grade Docker containerization setup orchestrating:
+- **FastAPI Backend**: Port `8001` (CPU and NVIDIA CUDA 12.1 GPU builds)
+- **React Frontend**: Port `5173` & Port `80` (production Nginx reverse-proxy with WebSocket support)
+- **PostgreSQL Database**: Port `5432` (PostgreSQL 16 with automatic schema initialization)
+
+### 1. Run in CPU Mode (Universal - No GPU required)
+
+To run the complete system (DB, Backend, Frontend) with standard CPU execution:
+
+```bash
+# Using Docker Compose:
+docker-compose up --build
+
+# Or on Windows using 1-click script:
+.\start_docker_cpu.ps1
+
+# Or on Linux / macOS:
+./start_docker_cpu.sh
+```
+
+### 2. Run in NVIDIA GPU Mode (CUDA 12.1 Hardware Acceleration)
+
+To run with NVIDIA CUDA hardware acceleration:
+
+```bash
+# Using Docker Compose with the GPU overlay:
+docker-compose -f docker-compose.yml -f docker-compose.gpu.yml up --build
+
+# Or on Windows using 1-click script:
+.\start_docker_gpu.ps1
+
+# Or on Linux:
+./start_docker_gpu.sh
+```
+
+> **GPU Requirements**: NVIDIA host drivers and the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) (`docker-nvidia` / `nvidia-ctk`).
+
+### Accessing the Containerized System
+
+- **Frontend Dashboard**: [http://localhost:5173](http://localhost:5173) or [http://localhost](http://localhost)
+- **Backend API & Swagger Docs**: [http://localhost:8001/docs](http://localhost:8001/docs)
+- **Backend Health Check**: [http://localhost:8001/api/health](http://localhost:8001/api/health)
+- **PostgreSQL Database**: `localhost:5432` (`db: PPE_Detect`, `user: postgres`)
+
+---
+
+## Commands to Run the Project (Host / Local Setup)
 
 You do not need batch files. Run the backend and frontend directly in separate terminal windows:
 
