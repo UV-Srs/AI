@@ -1,11 +1,23 @@
-fastapi>=0.100.0
-uvicorn[standard]>=0.23.0
-websockets>=12.0
-opencv-python>=4.8.0
-ultralytics>=8.4.0
-pydantic>=2.0.0
-python-multipart>=0.0.9
-pillow>=10.0.0
-torch>=2.0.0
-psycopg2-binary>=2.9.9
-python-dotenv>=1.0.0
+# ======================================================================
+# ENTERPRISE PPE & FACE RECOGNITION - GPU / CUDA ACCELERATION
+# ======================================================================
+# For NVIDIA GPU acceleration (CUDA 12.1 / 11.8):
+# Run: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+torch
+torchvision
+ultralytics
+opencv-python
+numpy
+pandas
+matplotlib
+Pillow
+PyYAML
+tqdm
+ipykernel
+fastapi
+uvicorn
+python-multipart
+psycopg2-binary
+python-dotenv

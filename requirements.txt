@@ -1,3 +1,10 @@
+# ======================================================================
+# ENTERPRISE PPE & FACE RECOGNITION - GPU / CUDA ACCELERATION
+# ======================================================================
+# For NVIDIA GPU acceleration (CUDA 12.1 / 11.8):
+# Run: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+--extra-index-url https://download.pytorch.org/whl/cu121
+
 torch
 torchvision
 ultralytics
